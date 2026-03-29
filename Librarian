@@ -1,40 +1,53 @@
+import pandas as pd
+
+
 class librarian:
 
 
-    def __init__(self):
-        self.file = "C:\\file_location.pickle"
+    def __init__(self,file):
+        self.file = file
         self.shelves = pd.read_pickle(self.file)    
-        s = []
-        for i in range(len(self.shelves)):
-            s.append([])
-	    for ii in self.shelves[i]:
-                if ii != pd.isna(ii):
-                    s[i].append(ii)
+        s = {}
+        for i in self.shelves:
+            s[i] = []
+            for ii in range(len(self.shelves[i]))
+                s[i][ii].append([])
+                for iii in self.shelves[i][ii]:
+                    if iii != pd.isna(ii):
+                        s[i][ii].append(iii)
         self.shelves = s
 
+    #Always place the book at the end of the shelf
+    def file_book(self,book,side,shelf)
 
-    def file_book(self,book,shelf)
-
-        self.shelves[shelf].append(book)
-
-
-    def remove_book(self, book, shelf):
-
-        self.shelves[shelf].remove(book)
+        self.shelves[side][shelf-1].append(book)
 
 
+    def remove_book(self, book, side, shelf):
+
+        self.shelves[side][shelf-1].remove(book)
+
+    #when you run this, make sure to do z.file_book(book,side,shelf) if you're putting the book back.
     def find_book(self,book):
 
-        for i in range(len(self.shevles)):
+        for i in self.shevles:
             if book in self.shelves[i]:
-                return i+1
+                for ii in range(len(self.shelves[i])):
+                    if self.shelves[i][ii] == book:
+                        self.remove_book(book,i,ii+1)
+                        #I wanted to make it index by row, but the regional library catalogs by shelf.
+                        return {"section":i,"shelf":ii+1}
         
     def save(self):
         self.shelves = pd.DataFrame(self.shelves)
         self.shelves.to_pickle(self.file)
-
+    
+    def make_library(self,libray):
+        for i in libray.keys():
+            self.shelves[i] = libray[i]
+        self.save()
 
 
 if __name__ == "__main__":
-    z = librarian()
-    z.find_book("Count of Monte Cristo")
+    z = librarian("C:\\file_location.pickle")
+    z.make_library({'left':[["",],["",],["",],'right':[["",],["",]],'boxes':[["",],["",]]})
