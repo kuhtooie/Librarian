@@ -1,0 +1,40 @@
+class librarian:
+
+
+    def __init__(self):
+        self.file = "C:\\file_location.pickle"
+        self.shelves = pd.read_pickle(self.file)    
+        s = []
+        for i in range(len(self.shelves)):
+            s.append([])
+	    for ii in self.shelves[i]:
+                if ii != pd.isna(ii):
+                    s[i].append(ii)
+        self.shelves = s
+
+
+    def file_book(self,book,shelf)
+
+        self.shelves[shelf].append(book)
+
+
+    def remove_book(self, book, shelf):
+
+        self.shelves[shelf].remove(book)
+
+
+    def find_book(self,book):
+
+        for i in range(len(self.shevles)):
+            if book in self.shelves[i]:
+                return i+1
+        
+    def save(self):
+        self.shelves = pd.DataFrame(self.shelves)
+        self.shelves.to_pickle(self.file)
+
+
+
+if __name__ == "__main__":
+    z = librarian()
+    z.find_book("Count of Monte Cristo")
