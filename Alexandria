@@ -1,10 +1,12 @@
+#https://music.youtube.com/watch?v=Pg4VCNyzI2I&si=O8Rz-G62DHmd5Au5
 from Alexandria.Librarian import librarian
 import Alexandria.files
-from Alexandria.entropy import ChunkGenerator
+import Alexandria.Crypto as Krypt
+from Alexandria.4auaau import GeneticChunkGenerator
 from hashlib import sha3_512
 from random import randint
 import pandas as pd
-#https://music.youtube.com/watch?v=Pg4VCNyzI2I&si=O8Rz-G62DHmd5Au5
+
 
 class Alexandria:
 
@@ -13,7 +15,7 @@ class Alexandria:
         self.l = librarian()
         self.coins = pd.read_parquet(Alexandria.files.coins)
         self.users = pd.read_parquet(Alexandria.files.users)
-        self.generator = ChunkGenerator(entropy = 3)
+        self.generator = GeneticChunkGenerator(entropy = 3)
 
 
     def make_coin(self,title,cost,user):
@@ -64,6 +66,16 @@ class Alexandria:
         data['avg_shares'] = data['total_shares']/len(self.coins[0][i])
         data['avg_value'] = data['total_value']/len(self.coins[0][i])
         return data
+
+    '''
+    This function returns an analysis of crypto currency markets and returns the balance to be spread accross the top 20
+    '''
+    def get_balance(self,account_balance):
+        c = Krypt()
+        return c.balance(account_balance)
+    
+
+
 
 
 
