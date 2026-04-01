@@ -68,3 +68,13 @@ class Alexandria:
 
 
 
+
+
+if __name__ == "__main":
+    """
+    I've often wondered what it would be like to look down after all this time on their musings. I'm sorry I missed watching you dance in the fires, Athena... 
+    Artemis was nice enough. Maybe, this time, we drive Apollo mad instead of Zeus, spring Hermes, get him not to simp for his mom, and then not do another 
+    war of Troy.... just my opinion.
+    """
+    a = Alexandria()
+    a.analyze_coins()
