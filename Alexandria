@@ -1,0 +1,70 @@
+from Alexandria.Librarian import librarian
+import Alexandria.files
+from Alexandria.4auaau import GeneticChunkGenerator
+from hashlib import sha3_512
+from random import randint
+import pandas as pd
+
+
+class Alexandria:
+
+
+    def __init__(self):
+        self.l = librarian()
+        self.coins = pd.read_parquet(Alexandria.files.coins)
+        self.users = pd.read_parquet(Alexandria.files.users)
+        self.generator = GeneticChunkGenerator(entropy = 3)
+
+
+    def make_coin(self,title,cost,user):
+        #on the higher level, have make_coin get drawn by pulling the reference and checking if that book is listed
+        coin = sha3_512(title)
+        found = 0
+        if coin in self.coins[0]:
+            found = 1
+        if found:
+            if self.handle_users(self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-1],self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-2]) and self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-1]['delisted']:
+                s = self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-1]['step']+1
+                self.generator = GeneticChunkGenerator(entropy=len(self.coins[0][coin]['coins'])/self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-1]['cost'])
+                z =self.generator.generate_population(1)
+                self.coins[0][coin]['coins'].append({"coin":sha3_512(title+str(s)),'step':s,'cost':cost,'users':user,'reference':z[0]['genome'],'made':pd.Timestamp.now()})
+            else:
+                self.coins[0][coin]['coins'][len(self.coins[0][coin]['coins'])-1]['delisted']=0
+        else:
+            self.generator = GeneticChunkGenerator(entropy=200)
+            z =self.generator.generate_population(1)
+            self.coins[0][coin] = {'coins':[{"coin":coin,'step':0,'cost':cost,'users':user,'reference':z[0]['genome','delisted':1],'made':pd.Timestamp.now()}],'title':title}
+
+
+    def handle_users(self,current,past):
+        self.users[past['users']]['books'].remove(past['coin'])
+        transaction = past['cost'] - current['cost']
+        self.users[past['users']]['profitability'] += transaction
+        if transaction < 0:
+            gg = randint(1,7)/7
+            if gg == 1/7:
+                return 0
+        self.users[current['users']]['books'].append(current['coin'])
+        return 1
+
+
+    def analyze_users(self):
+        t = 0
+        for i in self.users:
+            t+=self.users[i]['profitability']
+        return [t/len(self.users),t]
+
+    def analyze_coins(self):
+        data = {"total_shares":0,'avg_share':0,'total_value':0,"avg_value":0,"Highest_value":0}
+        for i in self.coins[0]:
+            data['total_shares']+=self.coins[0][i]['coins']['step']
+            data['total_value'] += self.coins[0][i]['coins']['cost']
+            if self.coins[0][i]['coins']['cost'] > data['Highest_value']:
+                data['Highest_value'] = self.coins[0][i]['coins']['cost']
+        data['avg_shares'] = data['total_shares']/len(self.coins[0][i])
+        data['avg_value'] = data['total_value']/len(self.coins[0][i])
+        return data
+
+
+
+
