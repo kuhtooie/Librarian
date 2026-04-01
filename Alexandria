@@ -1,6 +1,6 @@
 from Alexandria.Librarian import librarian
 import Alexandria.files
-from Alexandria.4auaau import GeneticChunkGenerator
+from Alexandria.entropy import ChunkGenerator
 from hashlib import sha3_512
 from random import randint
 import pandas as pd
@@ -13,7 +13,7 @@ class Alexandria:
         self.l = librarian()
         self.coins = pd.read_parquet(Alexandria.files.coins)
         self.users = pd.read_parquet(Alexandria.files.users)
-        self.generator = GeneticChunkGenerator(entropy = 3)
+        self.generator = ChunkGenerator(entropy = 3)
 
 
     def make_coin(self,title,cost,user):
